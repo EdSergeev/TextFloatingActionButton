@@ -1,4 +1,8 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
+
+def version = "1.0.0"
+def code = 10000
 
 android {
     compileSdkVersion 25
@@ -7,8 +11,8 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode code
+        versionName version
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -31,4 +35,41 @@ dependencies {
     compile 'com.android.support:design:25.1.0'
 
     testCompile 'junit:junit:4.12'
+}
+
+
+task sourcesJar(type: Jar) {
+    project
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath = files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+publish {
+    bintrayUser = properties.getProperty('bintray.user')
+    bintrayKey = properties.getProperty('bintray.apikey')
+    dryRun = false
+    groupId = 'com.github.edsergeev'
+    artifactId = 'text-fab'
+    publishVersion = version
+    desc = 'Android UI widget'
+    licences = ['Apache-2.0']
+    website = 'https://github.com/EdSergeev/TextFloatingActionButton'
 }
