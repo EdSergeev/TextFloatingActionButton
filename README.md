@@ -12,7 +12,7 @@ compile 'com.github.edsergeev:text-fab:1.0.0'
 
 ## Usage
 
-You can use as regular _FloatingActionButton_, but with additional attributes
+You can use it as regular _FloatingActionButton_, but with additional attributes
 
 ```xml
     <com.github.edsergeev.TextFloatingActionButton
